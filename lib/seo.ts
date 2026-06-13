@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site";
+import { getCanonicalBaseUrl, PRODUCTION_DOMAIN } from "@/lib/site-url";
 
 type SeoOptions = {
   title: string;
@@ -18,12 +19,12 @@ export function createMetadata({
   type = "website",
   noIndex = false,
 }: SeoOptions): Metadata {
-  const url = `${siteConfig.url}${path}`;
+  const url = `${PRODUCTION_DOMAIN}${path}`;
 
   return {
     title,
     description,
-    metadataBase: new URL(siteConfig.url),
+    metadataBase: new URL(getCanonicalBaseUrl()),
     alternates: {
       canonical: path || "/",
     },
@@ -51,13 +52,7 @@ export function createMetadata({
       creator: siteConfig.twitterHandle,
     },
     robots: noIndex
-      ? {
-          index: false,
-          follow: false,
-        }
-      : {
-          index: true,
-          follow: true,
-        },
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   };
 }

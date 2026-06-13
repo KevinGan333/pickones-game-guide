@@ -1,17 +1,15 @@
-import { siteConfig } from "@/lib/site";
+import { PRODUCTION_DOMAIN } from "@/lib/site-url";
 
-type BreadcrumbItem = {
-  name: string;
-  path: string;
-};
+type BreadcrumbItem = { name: string; path: string };
 
 export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    description: siteConfig.description,
+    name: "PickOnes",
+    url: PRODUCTION_DOMAIN,
+    description:
+      "PickOnes provides practical game guides, walkthroughs, setup tips, best settings, and beginner-friendly recommendations for Nintendo Switch, Switch 2, retro handhelds, cozy games, and RPG players.",
     inLanguage: "en-US",
   };
 }
@@ -20,9 +18,9 @@ export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    name: "PickOnes",
+    url: PRODUCTION_DOMAIN,
+    logo: `${PRODUCTION_DOMAIN}/logo.png`,
   };
 }
 
@@ -34,7 +32,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${siteConfig.url}${item.path}`,
+      item: `${PRODUCTION_DOMAIN}${item.path}`,
     })),
   };
 }
@@ -57,7 +55,7 @@ export function gameHubSchema({
     "@type": "VideoGame",
     name: title,
     description,
-    url: `${siteConfig.url}${path}`,
+    url: `${PRODUCTION_DOMAIN}${path}`,
     gamePlatform: platform,
     genre,
     inLanguage: "en-US",
@@ -78,11 +76,11 @@ export function platformPageSchema({
     "@type": "WebPage",
     name: title,
     description,
-    url: `${siteConfig.url}${path}`,
+    url: `${PRODUCTION_DOMAIN}${path}`,
     isPartOf: {
       "@type": "WebSite",
-      name: siteConfig.name,
-      url: siteConfig.url,
+      name: "PickOnes",
+      url: PRODUCTION_DOMAIN,
     },
     inLanguage: "en-US",
   };
@@ -106,24 +104,24 @@ export function articleSchema({
     "@type": "Article",
     headline: title,
     description,
-    url: `${siteConfig.url}${path}`,
+    url: `${PRODUCTION_DOMAIN}${path}`,
     datePublished,
     dateModified,
     author: {
       "@type": "Organization",
-      name: siteConfig.name,
+      name: "PickOnes",
     },
     publisher: {
       "@type": "Organization",
-      name: siteConfig.name,
+      name: "PickOnes",
       logo: {
         "@type": "ImageObject",
-        url: `${siteConfig.url}/logo.png`,
+        url: `${PRODUCTION_DOMAIN}/logo.png`,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${siteConfig.url}${path}`,
+      "@id": `${PRODUCTION_DOMAIN}${path}`,
     },
     inLanguage: "en-US",
   };

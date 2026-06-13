@@ -2,33 +2,36 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { siteConfig } from "@/lib/site";
+import { PRODUCTION_DOMAIN, getCanonicalBaseUrl } from "@/lib/site-url";
 import JsonLd from "@/components/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: new URL(getCanonicalBaseUrl()),
   title: {
-    default: siteConfig.title,
+    default: "PickOnes | Practical Game Guides for Everyday Players",
     template: "%s | PickOnes",
   },
-  description: siteConfig.description,
+  description:
+    "PickOnes provides practical game guides, walkthroughs, setup tips, best settings, and beginner-friendly recommendations for Nintendo Switch, Switch 2, retro handhelds, cozy games, and RPG players.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: siteConfig.title,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    locale: siteConfig.locale,
+    title: "PickOnes | Practical Game Guides for Everyday Players",
+    description:
+      "PickOnes provides practical game guides, walkthroughs, setup tips, best settings, and beginner-friendly recommendations for Nintendo Switch, Switch 2, retro handhelds, cozy games, and RPG players.",
+    url: PRODUCTION_DOMAIN,
+    siteName: "PickOnes",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-    creator: siteConfig.twitterHandle,
+    title: "PickOnes | Practical Game Guides for Everyday Players",
+    description:
+      "PickOnes provides practical game guides, walkthroughs, setup tips, best settings, and beginner-friendly recommendations for Nintendo Switch, Switch 2, retro handhelds, cozy games, and RPG players.",
+    creator: "@pickones",
   },
 };
 

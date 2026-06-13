@@ -1,29 +1,16 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/site";
+import { getRobotsRules, getRobotsSitemapUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const isProduction =
-    process.env.VERCEL_ENV === "production" ||
-    (process.env.NODE_ENV === "production" && !process.env.VERCEL_URL);
+  const rules = getRobotsRules();
+  const sitemap = getRobotsSitemapUrl();
 
-  if (!isProduction) {
-    // Block all crawling on Vercel preview / staging deployments
-    return {
-      rules: {
-        userAgent: "*",
-        disallow: "/",
-      },
-      sitemap: undefined,
-    };
-  }
-
-  // Production — allow crawling with restrictions
   return {
     rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/api/", "/admin/", "/private/", "/search", "/tag/", "/author/"],
+      userAgent: rules.userAgent,
+      allow: rules.allow,
+      disallow: rules.disallow,
     },
-    sitemap: `${siteConfig.url}/sitemap.xml`,
+    sitemap,
   };
 }
