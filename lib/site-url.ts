@@ -14,7 +14,14 @@
 
 // ---- Domain constants ----
 
-export const PRODUCTION_DOMAIN = "https://www.pickones.com";
+/** Production domain.
+ *  Can be overridden via NEXT_PUBLIC_SITE_URL env var.
+ *  Falls back to hardcoded default (no env var required). */
+export const PRODUCTION_DOMAIN: string =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.pickones.com";
+
+/** Production hostnames used by isProductionHost() */
+const PRODUCTION_HOSTS = ["www.pickones.com", "pickones.com"];
 
 // ---- URL helpers ----
 
@@ -47,7 +54,7 @@ export async function isProductionHost(): Promise<boolean> {
     const { headers } = await import("next/headers");
     const headersList = await headers();
     const host = headersList.get("host") || "";
-    return host === "www.pickones.com" || host === "pickones.com";
+    return PRODUCTION_HOSTS.includes(host);
   } catch {
     // Fallback: if next/headers is unavailable (unlikely), use env vars
     if (process.env.VERCEL_ENV) {
