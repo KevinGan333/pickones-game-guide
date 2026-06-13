@@ -7,6 +7,21 @@ import { gearItems } from "@/data/gear";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Only serve full sitemap in production — prevent Vercel preview URLs from being indexed
+  const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production" && !process.env.VERCEL_URL;
+
+  if (!isProduction) {
+    // Return minimal sitemap on preview/staging — just the homepage
+    return [
+      {
+        url: siteConfig.url,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 1,
+      },
+    ];
+  }
+
   const baseUrl = siteConfig.url;
   const now = new Date();
 
