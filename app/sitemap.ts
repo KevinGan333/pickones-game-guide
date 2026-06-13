@@ -4,6 +4,7 @@ import { guideContents } from "@/data/guides";
 import { platforms } from "@/data/platforms";
 import { reviewContents } from "@/data/reviews";
 import { gearItems } from "@/data/gear";
+import { standaloneGuides } from "@/data/standalone-guides";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -76,10 +77,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const standaloneGuideRoutes = standaloneGuides.map((guide) => ({
+    url: `${baseUrl}/guides/${guide.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   return [
     ...staticRoutes,
     ...gameRoutes,
     ...guideRoutes,
+    ...standaloneGuideRoutes,
     ...platformRoutes,
     ...reviewRoutes,
     ...gearRoutes,

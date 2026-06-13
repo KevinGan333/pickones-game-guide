@@ -53,11 +53,11 @@ export default function HomePage() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#60a5fa]">Trending Guides</p>
             <div className="grid gap-3">
               {[
-                { t: "R36S Beginner Setup Guide", s: "/games/r36s/r36s-beginner-setup-guide" },
+                { t: "R36S Beginner Setup Guide", s: "/guides/r36s-setup-guide" },
+                { t: "Switch 2 First-Time Setup", s: "/guides/switch-2-first-time-setup" },
                 { t: "Best Kart Setups for Beginners", s: "/games/mario-kart-world/best-kart-setups" },
                 { t: "Stardew Valley Beginner Guide", s: "/games/stardew-valley/beginner-guide" },
                 { t: "How to Get Iron Nuggets in ACNH", s: "/games/animal-crossing-new-horizons/how-to-get-iron-nuggets" },
-                { t: "Pokémon Legends Z-A Beginner Guide", s: "/games/pokemon-legends-z-a/beginner-guide" },
               ].map((item) => (
                 <Link
                   key={item.s}

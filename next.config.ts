@@ -298,6 +298,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
+      // ---- Old R36S guide URLs → new standalone guides ----
+      {
+        source: "/games/r36s/r36s-beginner-setup-guide",
+        destination: "/guides/r36s-setup-guide",
+        permanent: true,
+      },
+
       // ---- Miscellaneous old patterns ----
       {
         source: "/store",
