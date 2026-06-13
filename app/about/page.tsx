@@ -1,198 +1,57 @@
 import { createMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
+import ArticleHero from "@/components/ArticleHero";
 
-export const metadata = createMetadata({
-  title: "About PickOnes",
-  description:
-    "Learn about PickOnes, a practical game guide site built for Nintendo Switch, Switch 2, retro handheld, cozy game, RPG, and family players who want clear walkthroughs, beginner tips, and honest device reviews.",
-  path: "/about",
-});
+export const metadata = createMetadata({ title: "About PickOnes", description: "Learn about PickOnes, a practical game guide site for Switch, Switch 2, retro handheld, and family players.", path: "/about" });
 
 const values = [
-  {
-    title: "Practical First, Not Theoretical",
-    description:
-      "Every guide on PickOnes is built around real gameplay, real devices, and real setup problems. We do not write guides from spec sheets or secondhand information. If we tell you how to back up an R36S SD card, replace a stock screen protector, or fix laggy N64 emulation, it is because we have done it ourselves.",
-  },
-  {
-    title: "Beginner-Friendly Without Being Shallow",
-    description:
-      "Gaming should be fun, not confusing. We write guides that respect beginners without talking down to them. A setup tutorial should be clear enough for a first-time handheld owner but detailed enough that an experienced tinkerer still finds something useful.",
-  },
-  {
-    title: "Honest About Device Limitations",
-    description:
-      "Budget handhelds are amazing value, but they are not perfect. We point out weak buttons, rough software, confusing buying channels, and performance ceilings. If a device struggles with PSP games or has electrical noise, we say so. Transparency builds trust.",
-  },
-  {
-    title: "Search Intent Over Clickbait",
-    description:
-      "PickOnes is built around what players actually search for: beginner guides, setup help, best settings, walkthroughs, and honest reviews. We structure content to answer real questions quickly, not to chase trending keywords or inflate word counts.",
-  },
-  {
-    title: "Depth Without Fluff",
-    description:
-      "We believe a 1,500-word guide that actually solves a problem is worth more than a 5,000-word article padded with filler. Every section in a PickOnes guide should earn its place. If a step does not help the reader, we cut it.",
-  },
+  { title: "Practical First, Not Theoretical", description: "Every guide is built around real gameplay, real devices, and real setup problems. If we tell you how to back up an R36S SD card, it is because we have done it ourselves." },
+  { title: "Beginner-Friendly Without Being Shallow", description: "Gaming should be fun, not confusing. We write guides that respect beginners — clear enough for a first-time owner but detailed enough for experienced tinkerers." },
+  { title: "Honest About Device Limitations", description: "Budget handhelds are amazing value but not perfect. We point out weak buttons, rough software, and performance ceilings. Transparency builds trust." },
+  { title: "Search Intent Over Clickbait", description: "PickOnes is built around what players search for: beginner guides, setup help, best settings, walkthroughs, and honest reviews. We answer real questions quickly." },
+  { title: "Depth Without Fluff", description: "A 1,500-word guide that solves a problem is worth more than a 5,000-word article padded with filler. If a step does not help the reader, we cut it." },
 ];
-
 const team = [
-  {
-    name: "Kevin.Kenny",
-    role: "Co-Founder & Technical Lead",
-    description:
-      "Kevin has spent over a decade working with consumer electronics, from component-level hardware to finished handheld devices. He leads device testing, emulator configuration, and technical accuracy for every hardware guide on PickOnes. If a guide covers SD card flashing, firmware updates, or emulator core tuning, Kevin has verified the steps personally.",
-  },
-  {
-    name: "Amy.Li",
-    role: "Co-Founder & Content Director",
-    description:
-      "Amy brings years of experience analyzing product value, comparing buying channels, and identifying what actually matters to everyday players. She ensures PickOnes guides stay focused on practical, actionable help — not marketing fluff — and that buying advice reflects real-world pricing and availability.",
-  },
-  {
-    name: "Kelino.Ken",
-    role: "Co-Founder & Platform Lead",
-    description:
-      "Kelino focuses on the intersection of portable devices and real-world usability. He leads coverage of retro handhelds, compact gaming setups, and device ergonomics, combining hands-on testing with a practical understanding of what makes a handheld enjoyable to use day after day.",
-  },
+  { name: "Kevin.Kenny", role: "Co-Founder & Technical Lead", description: "Kevin leads device testing, emulator configuration, and technical accuracy for every hardware guide on PickOnes." },
+  { name: "Amy.Li", role: "Co-Founder & Content Director", description: "Amy ensures PickOnes guides stay focused on practical, actionable help and that buying advice reflects real-world pricing." },
+  { name: "Kelino.Ken", role: "Co-Founder & Platform Lead", description: "Kelino leads coverage of retro handhelds, compact gaming setups, and device ergonomics with hands-on testing." },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: "About", path: "/about" },
-        ])}
-      />
-
-      <main className="min-h-screen bg-page-warm text-[#2b1608]">
-        {/* Hero */}
-        <section className="border-b border-orange-200 bg-hero-gradient px-6 py-16">
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "About", path: "/about" }])} />
+      <main className="bg-page">
+        <ArticleHero label="About PickOnes" title="Practical Game Guides for Players Who Just Want to Play" description="PickOnes was rebuilt as a focused game guide platform for Nintendo Switch, Switch 2, retro handheld, cozy game, RPG, and family players." />
+        <section className="mx-auto max-w-3xl px-6 py-14">
+          <h2 className="mb-6 text-2xl font-bold text-[#1e293b]">From General Reviews to Focused Game Guides</h2>
+          <div className="space-y-5 leading-relaxed text-[#475569]">
+            <p>PickOnes started as a broader consumer electronics review platform. Over time, the content that resonated most — and that the team enjoyed creating most — was always about games and gaming hardware.</p>
+            <p>In 2026, we rebuilt PickOnes from the ground up as a dedicated game guide site, refocusing entirely on helping everyday players find, set up, and enjoy great games and gaming devices.</p>
+            <p>Today, PickOnes covers Nintendo Switch and Switch 2 games, retro handhelds, cozy games, family-friendly titles, RPGs, and practical topics like SD card backup, firmware setup, emulator tuning, and buying advice.</p>
+          </div>
+        </section>
+        <section className="border-t border-[#e2e8f0] px-6 py-14">
           <div className="mx-auto max-w-7xl">
-            <p className="mb-3 text-sm font-black uppercase tracking-[0.25em] text-[#F08A24]">
-              About PickOnes
-            </p>
-
-            <h1 className="mb-6 max-w-4xl text-5xl font-black leading-tight md:text-6xl">
-              Practical Game Guides for Players Who Just Want to Play
-            </h1>
-
-            <p className="max-w-3xl text-lg leading-8 text-[#6b3f1d]">
-              PickOnes was rebuilt as a focused game guide platform for Nintendo
-              Switch, Switch 2, retro handheld, cozy game, RPG, and family
-              players. We create clear walkthroughs, beginner setup tutorials,
-              best settings guides, and honest device reviews — no fluff, no
-              filler, just practical help.
-            </p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#1a5dc4]">How We Work</p>
+            <h2 className="mb-10 text-3xl font-bold text-[#1e293b]">What Guides Our Content</h2>
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{values.map((v) => <div key={v.title} className="card p-5 md:p-6"><h3 className="mb-3 text-lg font-bold text-[#1e293b]">{v.title}</h3><p className="text-sm leading-relaxed text-[#475569]">{v.description}</p></div>)}</div>
           </div>
         </section>
-
-        {/* Story */}
-        <section className="mx-auto max-w-7xl px-6 py-14">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="mb-6 text-4xl font-black">
-              From General Reviews to Focused Game Guides
-            </h2>
-
-            <div className="space-y-5 leading-8 text-[#6b3f1d]">
-              <p>
-                PickOnes started as a broader consumer electronics review
-                platform, covering everything from phone accessories to office
-                gadgets. Over time, one thing became clear: the content that
-                resonated most with readers — and that the team enjoyed creating
-                most — was always about games and gaming hardware.
-              </p>
-              <p>
-                In 2026, we made a deliberate decision to rebuild PickOnes from
-                the ground up as a dedicated game guide site. We archived older
-                general-product content and refocused entirely on what we know
-                best: helping everyday players find, set up, and enjoy great
-                games and gaming devices.
-              </p>
-              <p>
-                Today, PickOnes covers Nintendo Switch and Switch 2 games,
-                retro handhelds like the R36S and Anbernic devices, cozy games,
-                family-friendly titles, RPGs, and practical topics like SD card
-                backup, firmware setup, emulator tuning, and buying advice.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Values */}
-        <section className="border-t border-orange-200 bg-white px-6 py-14">
+        <section className="border-t border-[#e2e8f0] px-6 py-14">
           <div className="mx-auto max-w-7xl">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#F08A24]">
-              How We Work
-            </p>
-            <h2 className="mb-10 text-4xl font-black">
-              What Guides Our Content
-            </h2>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {values.map((value) => (
-                <div
-                  key={value.title}
-                  className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm"
-                >
-                  <h3 className="mb-3 text-xl font-black">{value.title}</h3>
-                  <p className="leading-7 text-[#6b3f1d]">
-                    {value.description}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#1a5dc4]">Team</p>
+            <h2 className="mb-3 text-3xl font-bold text-[#1e293b]">The People Behind PickOnes</h2>
+            <p className="mb-10 max-w-2xl text-[#475569]">A small, hands-on team of gamers, tinkerers, and writers who test every device and verify every step.</p>
+            <div className="grid gap-5 md:grid-cols-3">{team.map((m) => <div key={m.name} className="card p-5 md:p-6"><h3 className="mb-1 text-xl font-bold text-[#1e293b]">{m.name}</h3><p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#1a5dc4]">{m.role}</p><p className="text-sm leading-relaxed text-[#475569]">{m.description}</p></div>)}</div>
           </div>
         </section>
-
-        {/* Team */}
-        <section className="border-t border-orange-200 px-6 py-14">
-          <div className="mx-auto max-w-7xl">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#F08A24]">
-              Team
-            </p>
-            <h2 className="mb-3 text-4xl font-black">The People Behind PickOnes</h2>
-            <p className="mb-10 max-w-3xl text-lg leading-8 text-[#6b3f1d]">
-              A small, hands-on team of gamers, tinkerers, and writers who test
-              every device, play every game, and verify every step before it
-              reaches a guide.
-            </p>
-
-            <div className="grid gap-6 md:grid-cols-3">
-              {team.map((member) => (
-                <div
-                  key={member.name}
-                  className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm"
-                >
-                  <h3 className="mb-2 text-2xl font-black">{member.name}</h3>
-                  <p className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-[#F08A24]">
-                    {member.role}
-                  </p>
-                  <p className="leading-7 text-[#6b3f1d]">
-                    {member.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Closing */}
-        <section className="border-t border-orange-200 bg-[#3b1f0f] px-6 py-16">
+        <section className="border-t border-[#e2e8f0] bg-navy px-6 py-16">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
-              PickOnes Game Guide
-            </p>
-            <p className="text-2xl font-black leading-relaxed text-orange-50">
-              Only with love and constant passion can you create extraordinary
-              achievements.
-            </p>
-            <p className="mt-4 text-sm text-orange-200">
-              — Kevin.Kenny, Co-Founder
-            </p>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#60a5fa]">PickOnes Game Guide</p>
+            <p className="text-2xl font-bold leading-relaxed text-white">&ldquo;Only with love and constant passion can you create extraordinary achievements.&rdquo;</p>
+            <p className="mt-4 text-sm text-[#94a3b8]">— Kevin.Kenny, Co-Founder</p>
           </div>
         </section>
       </main>

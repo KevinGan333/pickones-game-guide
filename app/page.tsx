@@ -1,145 +1,122 @@
 import Link from "next/link";
 import { createMetadata } from "@/lib/seo";
+import SectionHeader from "@/components/SectionHeader";
+import SearchPlaceholder from "@/components/SearchPlaceholder";
+import PlatformCard from "@/components/PlatformCard";
+import FeaturedGuideCard from "@/components/FeaturedGuideCard";
+import GameCard from "@/components/GameCard";
+import ReviewCard from "@/components/ReviewCard";
+import GearCard from "@/components/GearCard";
+import { platforms } from "@/data/platforms";
+import { games } from "@/data/games";
+import { guideContents, getGuidesByGameSlug } from "@/data/guides";
+import { reviewContents } from "@/data/reviews";
+import { gearItems } from "@/data/gear";
 
 export const metadata = createMetadata({
   title: "PickOnes | Practical Game Guides for Everyday Players",
-  description:
-    "PickOnes helps Nintendo Switch, Switch 2, retro handheld, cozy game, RPG, and family players find clear walkthroughs, beginner tips, setup guides, and best settings.",
+  description: "PickOnes helps Nintendo Switch, Switch 2, retro handheld, cozy game, RPG, and family players find clear walkthroughs, beginner tips, setup guides, and best settings.",
   path: "/",
 });
 
-const featuredSections = [
-  {
-    title: "Nintendo Switch Guides",
-    description:
-      "Beginner tips, family games, cozy game picks, settings, and practical walkthroughs.",
-    href: "/platforms/nintendo-switch",
-  },
-  {
-    title: "Switch 2 Guides",
-    description:
-      "Launch games, new features, setup help, and beginner-friendly recommendations.",
-    href: "/platforms/nintendo-switch-2",
-  },
-  {
-    title: "Retro Handheld Guides",
-    description:
-      "R36S, Retroid, Anbernic, TrimUI, backup, restore, setup, and best settings.",
-    href: "/platforms/retro-handheld",
-  },
-];
-
-const latestGuides = [
-  "Best Nintendo Switch Games for Beginners",
-  "R36S Backup and Restore Guide",
-  "Best Cozy Games on Nintendo Switch",
-  "Nintendo Switch 2 Beginner Guide",
-];
-
 export default function HomePage() {
- return (
-  <>
+  const featured = guideContents.slice(0, 3);
+  const popularGames = games.slice(0, 6);
+  const latestReviews = reviewContents.slice(0, 2);
+  const featuredGear = gearItems.slice(0, 2);
 
-    <main className="text-[#2b1608]">
-      <section className="relative overflow-hidden border-b border-orange-200 bg-home-hero">
-
-        <div className="relative mx-auto grid min-h-[680px] max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-2">
+  return (
+    <main>
+      {/* ── Hero ── */}
+      <section className="bg-hero border-b border-[#e2e8f0] px-6 py-16 md:py-24">
+        <div className="mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-[1fr_380px]">
           <div>
-            <p className="mb-5 inline-flex rounded-full bg-white/70 px-4 py-2 text-sm font-bold uppercase tracking-[0.2em] text-[#f97316] shadow-sm">
+            <p className="mb-5 inline-flex rounded-full border border-[#bfdbfe] bg-[#eff6ff] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#1a5dc4]">
               PickOnes Game Guide
             </p>
-
-            <h1 className="mb-6 max-w-3xl text-5xl font-black leading-tight tracking-tight md:text-7xl">
-              Practical Game Guides for Everyday Players.
+            <h1 className="mb-6 max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-[#1e293b] md:text-6xl">
+              Pick Better Games. Set Up Better Gear. Play Smarter.
             </h1>
-
-            <p className="mb-9 max-w-2xl text-lg leading-8 text-[#6b3f1d]">
-              Clear walkthroughs, beginner tips, setup guides, best settings,
-              and family-friendly game recommendations for Nintendo Switch,
-              Switch 2, retro handhelds, cozy games, and RPG players.
+            <p className="mb-8 max-w-2xl text-lg leading-relaxed text-[#475569]">
+              Practical guides, beginner-friendly walkthroughs, honest reviews,
+              and gear advice for Switch, Switch 2, retro handhelds, and more.
             </p>
-
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/games"
-                className="rounded-full bg-[#f97316] px-7 py-4 text-center font-bold text-white shadow-lg shadow-orange-300/40 transition hover:bg-[#c2410c]"
-              >
-                Browse Game Guides
-              </Link>
-
-              <Link
-                href="/platforms/retro-handheld"
-                className="rounded-full border border-[#f97316] bg-white/70 px-7 py-4 text-center font-bold text-[#c2410c] transition hover:bg-[#ffedd5]"
-              >
-                Retro Handheld Setup Guides
-              </Link>
+            <div className="mb-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/games" className="btn-primary">Browse Game Guides</Link>
+              <Link href="/platforms" className="btn-outline">Explore Platforms</Link>
             </div>
+            <SearchPlaceholder />
           </div>
 
-          <div className="rounded-[2rem] border border-orange-200 bg-white/75 p-6 shadow-2xl shadow-orange-200/60">
-            <div className="rounded-[1.5rem] bg-[#3b1f0f] p-8 text-orange-50">
-              <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-orange-300">
-                Featured Focus
-              </p>
-
-              <h2 className="mb-5 text-3xl font-black">
-                Nintendo, Cozy Games & Retro Handhelds
-              </h2>
-
-              <p className="mb-8 leading-7 text-orange-100">
-                PickOnes focuses on practical gaming help: what to play, how to
-                start, how to fix problems, and how to enjoy games with less
-                confusion.
-              </p>
-
-              <div className="grid gap-4">
-                {latestGuides.map((guide) => (
-                  <div
-                    key={guide}
-                    className="rounded-2xl border border-orange-900/60 bg-white/10 p-4 text-sm font-semibold"
-                  >
-                    {guide}
-                  </div>
-                ))}
-              </div>
+          {/* Trending panel — navy contrast */}
+          <div className="card-navy p-6">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#60a5fa]">Trending Guides</p>
+            <div className="grid gap-3">
+              {[
+                { t: "R36S Beginner Setup Guide", s: "/games/r36s/r36s-beginner-setup-guide" },
+                { t: "Best Kart Setups for Beginners", s: "/games/mario-kart-world/best-kart-setups" },
+                { t: "Stardew Valley Beginner Guide", s: "/games/stardew-valley/beginner-guide" },
+                { t: "How to Get Iron Nuggets in ACNH", s: "/games/animal-crossing-new-horizons/how-to-get-iron-nuggets" },
+                { t: "Pokémon Legends Z-A Beginner Guide", s: "/games/pokemon-legends-z-a/beginner-guide" },
+              ].map((item) => (
+                <Link
+                  key={item.s}
+                  href={item.s}
+                  className="block rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-3 text-sm font-medium text-[#cbd5e1] transition hover:border-[rgba(255,255,255,0.15)] hover:bg-[rgba(255,255,255,0.05)] hover:text-white"
+                >
+                  {item.t}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#f97316]">
-              Start Here
-            </p>
-            <h2 className="text-4xl font-black">Explore PickOnes Guides</h2>
+      {/* ── Platforms — white ── */}
+      <section className="px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader label="Platforms" title="Find Your Platform" description="Setup guides, best settings, game recommendations, and beginner help." href="/platforms" linkText="View All Platforms" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {platforms.map((p) => <PlatformCard key={p.slug} platform={p} guideCount={p.guides.length} />)}
           </div>
-
-          <p className="max-w-2xl text-[#6b3f1d]">
-            The new PickOnes is built around practical search intent: game
-            guides, platform guides, beginner help, walkthroughs, and setup
-            tutorials.
-          </p>
         </div>
+      </section>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {featuredSections.map((section) => (
-            <Link
-              key={section.href}
-              href={section.href}
-              className="rounded-[1.5rem] border border-orange-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-[#f97316] hover:shadow-xl hover:shadow-orange-200/60"
-            >
-              <h3 className="mb-4 text-2xl font-black">{section.title}</h3>
-              <p className="mb-6 leading-7 text-[#6b3f1d]">
-                {section.description}
-              </p>
-              <span className="font-bold text-[#f97316]">Explore Guides →</span>
-            </Link>
-          ))}
+      {/* ── Featured Guides — light blue ── */}
+      <section className="bg-blue-soft border-y border-[#e2e8f0] px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader label="Featured Guides" title="Latest Walkthroughs & Setup Help" href="/guides" linkText="View All Guides" />
+          <div className="grid gap-5 md:grid-cols-3">
+            {featured.map((g) => <FeaturedGuideCard key={`${g.gameSlug}-${g.guideSlug}`} guide={g} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Popular Games — white ── */}
+      <section className="px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader label="Games" title="Popular Game Hubs" description="Each game hub collects all related guides in one place." href="/games" linkText="View All Games" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {popularGames.map((g) => <GameCard key={g.slug} game={g} guideCount={getGuidesByGameSlug(g.slug).length} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Reviews + Gear — light blue ── */}
+      <section className="bg-blue-soft border-y border-[#e2e8f0] px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-2">
+            <div>
+              <SectionHeader label="Reviews" title="Honest Game Reviews" href="/reviews" linkText="View All Reviews" />
+              <div className="grid gap-4">{latestReviews.map((r) => <ReviewCard key={r.slug} review={r} />)}</div>
+            </div>
+            <div>
+              <SectionHeader label="Gear" title="Gaming Gear Guides" href="/gear" linkText="View All Gear" />
+              <div className="grid gap-4">{featuredGear.map((i) => <GearCard key={i.slug} item={i} guideCount={i.guides.length} />)}</div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
-  </>
-);
+  );
 }

@@ -224,6 +224,116 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+
+      // ---- Buying guides → /gear ----
+      {
+        source: "/buying-guides",
+        destination: "/gear",
+        permanent: true,
+      },
+      {
+        source: "/buying-guides/:path*",
+        destination: "/gear",
+        permanent: true,
+      },
+      {
+        source: "/buying-guide",
+        destination: "/gear",
+        permanent: true,
+      },
+      {
+        source: "/buying-guide/:path*",
+        destination: "/gear",
+        permanent: true,
+      },
+
+      // ---- WordPress author archives → /about ----
+      {
+        source: "/author",
+        destination: "/about",
+        permanent: true,
+      },
+      {
+        source: "/author/:path*",
+        destination: "/about",
+        permanent: true,
+      },
+
+      // ---- WordPress pagination → home ----
+      {
+        source: "/page/:path*",
+        destination: "/",
+        permanent: true,
+      },
+
+      // ---- WordPress date archives → /news ----
+      {
+        source: "/2025",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/2025/:path*",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/2024",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/2024/:path*",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/2026",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/2026/:path*",
+        destination: "/news",
+        permanent: true,
+      },
+
+      // ---- Miscellaneous old patterns ----
+      {
+        source: "/store",
+        destination: "/gear",
+        permanent: true,
+      },
+      {
+        source: "/store/:path*",
+        destination: "/gear",
+        permanent: true,
+      },
+      {
+        source: "/product-page",
+        destination: "/games",
+        permanent: true,
+      },
+      {
+        source: "/product-page/:path*",
+        destination: "/games",
+        permanent: true,
+      },
+      {
+        source: "/reviews/page/:path*",
+        destination: "/reviews",
+        permanent: true,
+      },
+      {
+        source: "/guides/page/:path*",
+        destination: "/guides",
+        permanent: true,
+      },
+      {
+        source: "/news/page/:path*",
+        destination: "/news",
+        permanent: true,
+      },
     ];
   },
 };

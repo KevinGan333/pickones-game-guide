@@ -1,97 +1,249 @@
 @import "tailwindcss";
 
-:root {
-  --background: #fff7ed;
-  --foreground: #2b1608;
-  --brand-orange: #F08A24;
-  --brand-orange-dark: #c2410c;
-  --brand-orange-light: #FDBA74;
-  --brand-cream: #ffedd5;
-  --brand-cream-light: #FFF8F0;
-  --brand-brown: #3b1f0f;
-  --brand-brown-light: #5C3517;
-  --text-primary: #2b1608;
-  --text-secondary: #6b3f1d;
-  --text-muted: #9a6b4a;
-  --surface: #ffffff;
-  --border: #fed7aa;
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
 }
+
+/* ==========================================
+   PickONEs Design System
+   Logo: #F08A24 (orange), #2b1608 (brown), #fff7ed (cream)
+   UI:  white + brand blue + light blue + soft navy
+   ========================================== */
+
+:root {
+  /* ---- Brand Colors ---- */
+  --brand-blue:        #1a5dc4;   /* primary brand blue */
+  --brand-blue-hover:  #1548a0;
+  --brand-blue-light:  #dbeafe;   /* light blue surfaces / chips */
+  --brand-blue-dim:    #eff6ff;   /* very light blue bg */
+
+  --brand-orange:      #F08A24;   /* logo accent — used sparingly */
+  --brand-orange-light:#fff7ed;   /* warm cream from logo */
+
+  --brand-navy:        #152c4b;   /* soft navy — depth, footer, contrast panels */
+  --brand-navy-dark:   #0f2340;   /* deeper navy */
+
+  /* ---- Backgrounds ---- */
+  --bg:                #ffffff;
+  --bg-off:            #f8fafc;
+  --bg-blue:           #f0f6ff;
+  --bg-blue-soft:      #f5f9ff;
+
+  /* ---- Surfaces (cards) ---- */
+  --surface:           #ffffff;
+  --surface-hover:     #f8fafc;
+  --surface-blue:      #f0f6ff;
+  --surface-navy:      #152c4b;
+
+  /* ---- Text ---- */
+  --text:              #1e293b;
+  --text-secondary:    #475569;
+  --text-muted:        #64748b;
+  --text-on-dark:      #e2e8f0;
+  --text-on-dark-muted:#94a3b8;
+
+  /* ---- Borders ---- */
+  --border:            #e2e8f0;
+  --border-light:      #f1f5f9;
+  --border-accent:     #bfdbfe;
+  --border-hover:      #93c5fd;
+
+  /* ---- Radii ---- */
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --container-max: 1280px;
+  --content-width: 720px;
+}
+
+/* ==========================================
+   Base
+   ========================================== */
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--text-primary);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  text-decoration: none;
-}
+a { text-decoration: none; color: inherit; }
 
 ::selection {
-  background: var(--brand-orange);
+  background: var(--brand-blue);
   color: #fff;
 }
 
-/* ---- Shared background patterns ---- */
+/* ==========================================
+   Scrollbar
+   ========================================== */
 
-.bg-home-hero {
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-off); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ==========================================
+   Section Backgrounds
+   ========================================== */
+
+.bg-page        { background: var(--bg); }
+.bg-off         { background: var(--bg-off); }
+.bg-blue-soft   { background: var(--bg-blue-soft); }
+.bg-blue        { background: var(--bg-blue); }
+.bg-navy        { background: var(--brand-navy); color: var(--text-on-dark); }
+.bg-navy-dark   { background: var(--brand-navy-dark); color: var(--text-on-dark); }
+
+/* Hero — light blue gradient */
+.bg-hero {
   background:
-    radial-gradient(circle at 15% 20%, #FED7AA, transparent 40%),
-    radial-gradient(circle at 85% 60%, #FDBA74, transparent 35%),
-    radial-gradient(circle at 50% 80%, #ffedd5, transparent 30%),
-    #fff7ed;
+    radial-gradient(ellipse 70% 50% at 20% 30%, #dbeafe, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, #eff6ff, transparent 50%),
+    var(--bg);
 }
 
-.bg-page-warm {
-  background:
-    radial-gradient(ellipse at 30% 0%, #ffedd5, transparent 50%),
-    radial-gradient(ellipse at 70% 100%, #fed7aa, transparent 40%),
-    #fff7ed;
-}
+/* ==========================================
+   Card System
+   ========================================== */
 
-.bg-page-cool {
-  background:
-    radial-gradient(ellipse at 20% 0%, #fed7aa, transparent 50%),
-    radial-gradient(ellipse at 80% 100%, #ffedd5, transparent 40%),
-    #FFF8F0;
-}
-
-.bg-hero-gradient {
-  background: linear-gradient(135deg,
-    #fff7ed 0%,
-    #ffedd5 30%,
-    #fed7aa 70%,
-    #fdba74 100%
-  );
-}
-
-.bg-card {
-  background: #ffffff;
+.card {
+  background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.bg-card-hover {
-  background: #ffffff;
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(26, 93, 196, 0.08), 0 1px 3px rgba(0,0,0,0.04);
+  transform: translateY(-1px);
+}
+
+.card-blue {
+  background: var(--surface-blue);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-blue:hover {
+  border-color: var(--brand-blue);
+  box-shadow: 0 4px 20px rgba(26, 93, 196, 0.12);
+  transform: translateY(-1px);
+}
+
+.card-navy {
+  background: var(--brand-navy);
+  color: var(--text-on-dark);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ==========================================
+   Buttons
+   ========================================== */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
+  background: var(--brand-blue);
+  color: #fff;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--brand-blue-hover);
+  box-shadow: 0 4px 16px rgba(26, 93, 196, 0.3);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
+  border: 2px solid var(--brand-blue);
+  color: var(--brand-blue);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: var(--brand-blue-dim);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
   border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--surface);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.bg-card-hover:hover {
-  border-color: var(--brand-orange);
-  box-shadow: 0 12px 40px -12px rgba(240, 138, 36, 0.25);
-  transform: translateY(-2px);
+.btn-ghost:hover {
+  background: var(--bg-off);
+  border-color: var(--border-accent);
+  color: var(--brand-blue);
 }
 
-.bg-dark-card {
-  background: var(--brand-brown);
-  color: #ffedd5;
+/* ==========================================
+   Chips
+   ========================================== */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
 }
 
-.bg-dark-card-accent {
-  background: var(--brand-brown);
-  color: #ffedd5;
-  border: 1px solid rgba(253, 186, 116, 0.2);
+.chip-blue    { background: #dbeafe; color: #1a5dc4; }
+.chip-orange  { background: #fff7ed; color: #c2410c; }
+.chip-green   { background: #dcfce7; color: #16a34a; }
+.chip-purple  { background: #f3e8ff; color: #9333ea; }
+.chip-cyan    { background: #cffafe; color: #0891b2; }
+.chip-amber   { background: #fef3c7; color: #d97706; }
+
+.chip-muted {
+  background: var(--bg-off);
+  color: var(--text-muted);
+}
+
+.chip-navy {
+  background: rgba(255,255,255,0.12);
+  color: #93c5fd;
+}
+
+/* ==========================================
+   Focus
+   ========================================== */
+
+*:focus-visible {
+  outline: 2px solid var(--brand-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

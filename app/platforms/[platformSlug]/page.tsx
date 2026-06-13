@@ -5,230 +5,52 @@ import { reviewContents } from "@/data/reviews";
 import { createMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbSchema, platformPageSchema } from "@/lib/schema";
+import ArticleHero from "@/components/ArticleHero";
+import ReviewCard from "@/components/ReviewCard";
+import DisclosureBox from "@/components/DisclosureBox";
 
-type PlatformPageProps = {
-  params: Promise<{
-    platformSlug: string;
-  }>;
-};
+type Props = { params: Promise<{ platformSlug: string }> };
 
-export function generateStaticParams() {
-  return platforms.map((platform) => ({
-    platformSlug: platform.slug,
-  }));
+export function generateStaticParams() { return platforms.map((p) => ({ platformSlug: p.slug })); }
+
+export async function generateMetadata({ params }: Props) {
+  const { platformSlug } = await params;
+  const p = getPlatformBySlug(platformSlug);
+  if (!p) return createMetadata({ title: "Platform Not Found", description: "Not found.", path: "/platforms", noIndex: true });
+  return createMetadata({ title: `${p.title} Guides`, description: `Browse ${p.title} guides on PickOnes.`, path: `/platforms/${p.slug}` });
 }
 
-export async function generateMetadata({ params }: PlatformPageProps) {
+export default async function PlatformHubPage({ params }: Props) {
   const { platformSlug } = await params;
-  const platform = getPlatformBySlug(platformSlug);
-
-  if (!platform) {
-    return createMetadata({
-      title: "Platform Not Found",
-      description: "This PickOnes platform page could not be found.",
-      path: "/platforms",
-      noIndex: true,
-    });
-  }
-
-  return createMetadata({
-    title: `${platform.title} Guides`,
-    description: `Browse practical ${platform.title} guides, setup tips, beginner help, best settings, game recommendations, and player-friendly tutorials on PickOnes.`,
-    path: `/platforms/${platform.slug}`,
-  });
-}
-
-export default async function PlatformHubPage({ params }: PlatformPageProps) {
-  const { platformSlug } = await params;
-  const platform = getPlatformBySlug(platformSlug);
-
-  if (!platform) {
-    notFound();
-  }
-
-  const platformReviews = reviewContents.filter((review) =>
-    review.platform.toLowerCase().includes(platform.title.toLowerCase())
-  );
+  const p = getPlatformBySlug(platformSlug);
+  if (!p) notFound();
+  const revs = reviewContents.filter((r) => r.platform.toLowerCase().includes(p.title.toLowerCase()));
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: "Platforms", path: "/platforms" },
-          { name: platform.title, path: `/platforms/${platform.slug}` },
-        ])}
-      />
-
-      <JsonLd
-        data={platformPageSchema({
-          title: `${platform.title} Guides`,
-          description: platform.description,
-          path: `/platforms/${platform.slug}`,
-        })}
-      />
-
-      <main className="min-h-screen bg-page-warm text-[#2b1608]">
-        <section className="border-b border-orange-200 bg-hero-gradient px-6 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-6 flex flex-wrap items-center gap-2 text-sm font-bold text-[#6b3f1d]">
-              <Link href="/platforms" className="hover:text-[#f97316]">
-                Platforms
-              </Link>
-              <span>/</span>
-              <span className="text-[#f97316]">{platform.title}</span>
-            </div>
-
-            <div className="mb-5 flex flex-wrap gap-3">
-              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#c2410c] shadow-sm">
-                {platform.category}
-              </span>
-            </div>
-
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#f97316]">
-              Platform Hub
-            </p>
-
-            <h1 className="mb-6 max-w-4xl text-5xl font-black leading-tight md:text-6xl">
-              {platform.title} Guides
-            </h1>
-
-            <p className="max-w-3xl text-lg leading-8 text-[#6b3f1d]">
-              {platform.description}
-            </p>
-          </div>
-        </section>
-
-        <section className="mx-auto grid max-w-7xl gap-8 px-6 py-14 lg:grid-cols-[2fr_1fr]">
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Platforms", path: "/platforms" }, { name: p.title, path: `/platforms/${p.slug}` }])} />
+      <JsonLd data={platformPageSchema({ title: `${p.title} Guides`, description: p.description, path: `/platforms/${p.slug}` })} />
+      <main className="bg-page">
+        <ArticleHero breadcrumbs={[{ label: "Home", href: "/" }, { label: "Platforms", href: "/platforms" }, { label: p.title }]} chips={[{ label: p.category, accent: true }]} label="Platform Hub" title={`${p.title} Guides`} description={p.description} />
+        <section className="mx-auto grid max-w-7xl gap-8 px-6 py-14 lg:grid-cols-[1fr_320px]">
           <div>
-            <div className="mb-8">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#f97316]">
-                Guide Collection
-              </p>
-              <h2 className="text-4xl font-black">
-                Latest {platform.title} Guides
-              </h2>
-            </div>
-
-            <div className="grid gap-5">
-              {platform.guides.map((guide) => (
-                <div
-                  key={guide.slug}
-                  className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#f97316] hover:shadow-xl hover:shadow-orange-200/60"
-                >
-                  <div className="mb-3">
-                    <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#c2410c]">
-                      {guide.type}
-                    </span>
-                  </div>
-
-                  <h3 className="mb-3 text-2xl font-black">{guide.title}</h3>
-
-                  <p className="mb-5 leading-7 text-[#6b3f1d]">
-                    {guide.description}
-                  </p>
-
-                  {guide.gameSlug ? (
-                    <Link
-                      href={`/games/${guide.gameSlug}/${guide.slug}`}
-                      className="text-sm font-bold text-[#f97316] hover:underline"
-                    >
-                      Read Guide →
-                    </Link>
-                  ) : (
-                    <p className="text-sm font-bold text-[#f97316]">
-                      Platform guide page coming next →
-                    </p>
-                  )}
+            <h2 className="mb-6 text-2xl font-bold text-[#1e293b]">Guide Collection</h2>
+            <div className="grid gap-4">
+              {p.guides.map((g) => (
+                <div key={g.slug} className="card p-5 md:p-6">
+                  <span className="mb-3 chip chip-blue">{g.type}</span>
+                  <h3 className="mb-2 text-lg font-bold text-[#1e293b]">{g.title}</h3>
+                  <p className="mb-4 text-sm leading-relaxed text-[#475569]">{g.description}</p>
+                  {g.gameSlug ? <Link href={`/games/${g.gameSlug}/${g.slug}`} className="text-sm font-semibold text-[#1a5dc4] transition hover:text-[#1548a0]">Read Guide →</Link> : <span className="text-sm text-[#94a3b8]">Coming soon</span>}
                 </div>
               ))}
             </div>
-
-            {platformReviews.length > 0 && (
-              <div className="mt-12">
-                <div className="mb-8">
-                  <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#f97316]">
-                    Reviews
-                  </p>
-                  <h2 className="text-4xl font-black">
-                    {platform.title} Reviews
-                  </h2>
-                </div>
-
-                <div className="grid gap-5">
-                  {platformReviews.map((review) => (
-                    <Link
-                      key={review.slug}
-                      href={`/reviews/${review.slug}`}
-                      className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#f97316] hover:shadow-xl hover:shadow-orange-200/60"
-                    >
-                      <div className="mb-3 flex flex-wrap gap-2">
-                        <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#c2410c]">
-                          Review
-                        </span>
-                        <span className="rounded-full bg-[#fff7ed] px-3 py-1 text-xs font-bold text-[#6b3f1d]">
-                          {review.playTime}
-                        </span>
-                      </div>
-
-                      <h3 className="mb-3 text-2xl font-black">{review.title}</h3>
-
-                      <p className="mb-4 line-clamp-2 leading-7 text-[#6b3f1d]">
-                        {review.excerpt}
-                      </p>
-
-                      <div className="mb-4 flex flex-wrap gap-2">
-                        {review.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-[#3b1f0f] px-3 py-1 text-xs font-bold text-orange-50"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <span className="text-sm font-bold text-[#f97316] hover:underline">
-                        Read Review →
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
+            {revs.length > 0 && <div className="mt-14"><h2 className="mb-6 text-2xl font-bold text-[#1e293b]">{p.title} Reviews</h2><div className="grid gap-4 md:grid-cols-2">{revs.map((r) => <ReviewCard key={r.slug} review={r} />)}</div></div>}
           </div>
-
-          <aside className="h-fit space-y-6">
-            <div className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-2xl font-black">Who This Is For</h2>
-              <p className="leading-8 text-[#6b3f1d]">{platform.audience}</p>
-            </div>
-
-            <div className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-2xl font-black">Focus Areas</h2>
-
-              <div className="grid gap-3">
-                {platform.focus.map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl bg-[#fff7ed] px-4 py-3 text-sm font-bold text-[#6b3f1d]"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[1.5rem] bg-[#3b1f0f] p-6 text-orange-50 shadow-sm">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
-                PickOnes Strategy
-              </p>
-              <p className="text-sm leading-7 text-orange-100">
-                Platform hubs help PickOnes connect game guides, setup
-                tutorials, device guides, and beginner-friendly recommendations
-                into one clear SEO structure.
-              </p>
-            </div>
+          <aside className="space-y-5">
+            <DisclosureBox title="Who This Is For" variant="info">{p.audience}</DisclosureBox>
+            <DisclosureBox title="Focus Areas" variant="info"><ul className="grid gap-2">{p.focus.map((f) => <li key={f} className="rounded-lg bg-[#eff6ff] px-4 py-2.5 text-sm font-medium text-[#475569]">{f}</li>)}</ul></DisclosureBox>
+            <DisclosureBox title="Platform Strategy" variant="highlight">Platform hubs connect game guides, setup tutorials, device guides, and beginner-friendly recommendations.</DisclosureBox>
           </aside>
         </section>
       </main>

@@ -1,221 +1,53 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getReviewBySlug, reviewContents } from "@/data/reviews";
 import { createMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
+import ArticleHero from "@/components/ArticleHero";
+import TableOfContents from "@/components/TableOfContents";
+import FAQSection from "@/components/FAQSection";
+import DisclosureBox from "@/components/DisclosureBox";
 
-type ReviewPageProps = {
-  params: Promise<{
-    reviewSlug: string;
-  }>;
-};
+type Props = { params: Promise<{ reviewSlug: string }> };
 
-export function generateStaticParams() {
-  return reviewContents.map((review) => ({
-    reviewSlug: review.slug,
-  }));
+export function generateStaticParams() { return reviewContents.map((r) => ({ reviewSlug: r.slug })); }
+
+export async function generateMetadata({ params }: Props) {
+  const { reviewSlug } = await params;
+  const r = getReviewBySlug(reviewSlug);
+  if (!r) return createMetadata({ title: "Review Not Found", description: "Not found.", path: "/reviews", noIndex: true });
+  return createMetadata({ title: r.seoTitle, description: r.metaDescription, path: `/reviews/${r.slug}`, type: "article" });
 }
 
-export async function generateMetadata({ params }: ReviewPageProps) {
+export default async function ReviewDetailPage({ params }: Props) {
   const { reviewSlug } = await params;
-  const review = getReviewBySlug(reviewSlug);
+  const r = getReviewBySlug(reviewSlug);
+  if (!r) notFound();
 
-  if (!review) {
-    return createMetadata({
-      title: "Review Not Found",
-      description: "This PickOnes review could not be found.",
-      path: "/reviews",
-      noIndex: true,
-    });
-  }
-
-  return createMetadata({
-    title: review.seoTitle,
-    description: review.metaDescription,
-    path: `/reviews/${review.slug}`,
-    type: "article",
-  });
-}
-
-export default async function ReviewDetailPage({ params }: ReviewPageProps) {
-  const { reviewSlug } = await params;
-  const review = getReviewBySlug(reviewSlug);
-
-  if (!review) {
-    notFound();
-  }
+  const sections = r.sections.filter((s) => s.heading !== "Frequently Asked Questions" && s.body.length > 0);
+  const toc = [...sections.map((s) => ({ id: s.heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-$/g,""), text: s.heading })), { id: "faq", text: "FAQ" }];
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: "Reviews", path: "/reviews" },
-          { name: review.title, path: `/reviews/${review.slug}` },
-        ])}
-      />
-
-      <JsonLd
-        data={articleSchema({
-          title: review.title,
-          description: review.metaDescription,
-          path: `/reviews/${review.slug}`,
-        })}
-      />
-
-      <main className="min-h-screen bg-[#fff7ed] text-[#2b1608]">
-        <section className="border-b border-orange-200 bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] px-6 py-14">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-6 flex flex-wrap items-center gap-2 text-sm font-bold text-[#6b3f1d]">
-              <Link href="/reviews" className="hover:text-[#f97316]">
-                Reviews
-              </Link>
-              <span>/</span>
-              <span className="text-[#f97316]">{review.gameTitle}</span>
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Reviews", path: "/reviews" }, { name: r.title, path: `/reviews/${r.slug}` }])} />
+      <JsonLd data={articleSchema({ title: r.title, description: r.metaDescription, path: `/reviews/${r.slug}` })} />
+      <main className="bg-page">
+        <ArticleHero breadcrumbs={[{ label: "Home", href: "/" }, { label: "Reviews", href: "/reviews" }, { label: r.gameTitle }]} chips={[{ label: r.gameTitle, accent: true }, { label: r.playTime }]} label="PickOnes Review" title={r.title} description={r.excerpt} />
+        <section className="mx-auto grid max-w-7xl gap-8 px-6 py-14 lg:grid-cols-[1fr_320px]">
+          <article className="min-w-0">
+            <div className="mb-10"><DisclosureBox title="Quick Verdict" variant="highlight"><p className="text-base leading-relaxed">{r.verdict}</p></DisclosureBox></div>
+            <TableOfContents headings={toc} />
+            <div className="mb-10 grid gap-5 md:grid-cols-2">
+              <DisclosureBox title="Pros" variant="info"><ul className="grid gap-2 text-sm">{r.pros.map((p) => <li key={p} className="flex gap-2"><span className="text-green-600 flex-shrink-0">+</span><span className="text-[#475569]">{p}</span></li>)}</ul></DisclosureBox>
+              <DisclosureBox title="Cons" variant="warning"><ul className="grid gap-2 text-sm">{r.cons.map((c) => <li key={c} className="flex gap-2"><span className="text-amber-600 flex-shrink-0">−</span><span className="text-[#475569]">{c}</span></li>)}</ul></DisclosureBox>
             </div>
-
-            <div className="mb-5 flex flex-wrap gap-3">
-              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#c2410c] shadow-sm">
-                {review.category}
-              </span>
-              <span className="rounded-full bg-[#3b1f0f] px-4 py-2 text-sm font-bold text-orange-50 shadow-sm">
-                {review.playTime}
-              </span>
-            </div>
-
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#f97316]">
-              PickOnes Review
-            </p>
-
-            <h1 className="mb-6 max-w-5xl text-4xl font-black leading-tight md:text-6xl">
-              {review.title}
-            </h1>
-
-            <p className="max-w-3xl text-lg leading-8 text-[#6b3f1d]">
-              {review.excerpt}
-            </p>
-          </div>
-        </section>
-
-        <section className="mx-auto grid max-w-7xl gap-8 px-6 py-14 lg:grid-cols-[2fr_1fr]">
-          <article className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm md:p-10">
-            <div className="mb-10 rounded-[1.5rem] bg-[#3b1f0f] p-6 text-orange-50">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
-                Quick Verdict
-              </p>
-              <p className="text-lg leading-8 text-orange-100">
-                {review.verdict}
-              </p>
-            </div>
-
-            <section className="mb-10 grid gap-5 md:grid-cols-2">
-              <div className="rounded-[1.25rem] border border-orange-200 bg-[#fff7ed] p-5">
-                <h2 className="mb-4 text-2xl font-black">Pros</h2>
-                <ul className="grid gap-3 text-sm leading-6 text-[#6b3f1d]">
-                  {review.pros.map((item) => (
-                    <li key={item}>+ {item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-[1.25rem] border border-orange-200 bg-[#fff7ed] p-5">
-                <h2 className="mb-4 text-2xl font-black">Cons</h2>
-                <ul className="grid gap-3 text-sm leading-6 text-[#6b3f1d]">
-                  {review.cons.map((item) => (
-                    <li key={item}>- {item}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {review.sections.map((section) => (
-              <section key={section.heading} className="mb-10">
-                <h2 className="mb-4 text-3xl font-black">{section.heading}</h2>
-
-                {section.body.length > 0 && (
-                  <div className="space-y-5">
-                    {section.body.map((paragraph) => (
-                      <p key={paragraph} className="leading-8 text-[#6b3f1d]">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </section>
-            ))}
-
-            {review.faqs.length > 0 && (
-              <section>
-                <h2 className="mb-4 text-3xl font-black">FAQ</h2>
-
-                <div className="grid gap-4">
-                  {review.faqs.map((faq) => (
-                    <div
-                      key={faq.question}
-                      className="rounded-[1.25rem] border border-orange-200 bg-[#fff7ed] p-5"
-                    >
-                      <h3 className="mb-2 text-xl font-black">{faq.question}</h3>
-                      <p className="leading-7 text-[#6b3f1d]">{faq.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {sections.map((s) => { const id = s.heading.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/-$/g,""); return <section key={s.heading} id={id} className="mb-10 scroll-mt-24"><h2 className="mb-5 text-2xl font-bold text-[#1e293b]">{s.heading}</h2><div className="space-y-4">{s.body.map((p) => <p key={p.slice(0,60)} className="leading-relaxed text-[#475569]">{p}</p>)}</div></section>; })}
+            {r.faqs.length > 0 && <div id="faq" className="scroll-mt-24"><FAQSection faqs={r.faqs} /></div>}
           </article>
-
-          <aside className="h-fit space-y-6">
-            <div className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-2xl font-black">Review Info</h2>
-
-              <div className="grid gap-3 text-sm">
-                <div className="rounded-2xl bg-[#fff7ed] p-4">
-                  <p className="mb-1 font-bold text-[#f97316]">Game</p>
-                  <p className="font-black">{review.gameTitle}</p>
-                </div>
-
-                <div className="rounded-2xl bg-[#fff7ed] p-4">
-                  <p className="mb-1 font-bold text-[#f97316]">Platform</p>
-                  <p className="font-black">{review.platform}</p>
-                </div>
-
-                <div className="rounded-2xl bg-[#fff7ed] p-4">
-                  <p className="mb-1 font-bold text-[#f97316]">Play Time</p>
-                  <p className="font-black">{review.playTime}</p>
-                </div>
-
-                <div className="rounded-2xl bg-[#fff7ed] p-4">
-                  <p className="mb-1 font-bold text-[#f97316]">Updated</p>
-                  <p className="font-black">{review.updatedAt}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-[1.5rem] border border-orange-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-5 text-2xl font-black">Tags</h2>
-
-              <div className="flex flex-wrap gap-2">
-                {review.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#c2410c]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[1.5rem] bg-[#3b1f0f] p-6 text-orange-50 shadow-sm">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-orange-300">
-                PickOnes Review Standard
-              </p>
-              <p className="text-sm leading-7 text-orange-100">
-                Reviews should help players understand gameplay feel, content
-                structure, strengths, weaknesses, and whether the game is worth
-                their time.
-              </p>
-            </div>
+          <aside className="space-y-5">
+            <DisclosureBox title="Review Info" variant="info"><div className="grid gap-3 text-sm"><div><span className="font-medium text-[#1e293b]">Game: </span><span className="text-[#475569]">{r.gameTitle}</span></div><div><span className="font-medium text-[#1e293b]">Platform: </span><span className="text-[#475569]">{r.platform}</span></div><div><span className="font-medium text-[#1e293b]">Play Time: </span><span className="text-[#475569]">{r.playTime}</span></div><div><span className="font-medium text-[#1e293b]">Author: </span><span className="text-[#475569]">{r.author}</span></div><div><span className="font-medium text-[#1e293b]">Updated: </span><span className="text-[#475569]">{r.updatedAt}</span></div></div></DisclosureBox>
+            <DisclosureBox title="Tags" variant="info"><div className="flex flex-wrap gap-1.5">{r.tags.map((t) => <span key={t} className="chip chip-muted text-[11px]">{t}</span>)}</div></DisclosureBox>
+            <DisclosureBox title="Review Standard" variant="highlight">Reviews help players understand gameplay feel, content, strengths, weaknesses, and value.</DisclosureBox>
           </aside>
         </section>
       </main>
