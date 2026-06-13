@@ -16,27 +16,6 @@
 
 export const PRODUCTION_DOMAIN = "https://www.pickones.com";
 
-// ---- Environment detection ----
-
-/**
- * Returns true if the current build is a production deployment
- * on the custom domain. Vercel Preview and local dev return false.
- */
-export function isProductionDeployment(): boolean {
-  // Vercel sets VERCEL_ENV to "production", "preview", or "development"
-  if (process.env.VERCEL_ENV) {
-    return process.env.VERCEL_ENV === "production";
-  }
-
-  // Local production build (npm run build && npm run start without Vercel)
-  // Treat as production-like for sitemap/robots
-  if (process.env.NODE_ENV === "production" && !process.env.VERCEL_URL) {
-    return true;
-  }
-
-  return false;
-}
-
 // ---- URL helpers ----
 
 /** Canonical base URL — always the production domain, even on preview */
@@ -51,29 +30,53 @@ export function getCanonicalUrl(path: string): string {
   return `${base}${normalizedPath}`;
 }
 
-/** Sitemap base URL — only used in production */
+/** Sitemap base URL — always production domain */
 export function getSitemapBaseUrl(): string {
   return PRODUCTION_DOMAIN;
+}
+
+/**
+ * Checks whether the current request comes from the production domain.
+ * Used by robots.ts and sitemap.ts at request time.
+ *
+ * This is more reliable than VERCEL_ENV because it checks the actual
+ * incoming Host header rather than build-time environment variables.
+ */
+export async function isProductionHost(): Promise<boolean> {
+  try {
+    const { headers } = await import("next/headers");
+    const headersList = await headers();
+    const host = headersList.get("host") || "";
+    return host === "www.pickones.com" || host === "pickones.com";
+  } catch {
+    // Fallback: if next/headers is unavailable (unlikely), use env vars
+    if (process.env.VERCEL_ENV) {
+      return process.env.VERCEL_ENV === "production";
+    }
+    return false;
+  }
 }
 
 /**
  * Returns true if the full sitemap should be served.
  * Only true in production — preview/staging get a minimal sitemap.
  */
-export function shouldServeFullSitemap(): boolean {
-  return isProductionDeployment();
+export async function shouldServeFullSitemap(): Promise<boolean> {
+  return isProductionHost();
 }
 
 /**
- * Returns robots.txt rules based on environment.
+ * Returns robots.txt rules based on host.
  * Preview: block all · Production: allow with selective disallow.
  */
-export function getRobotsRules(): {
+export async function getRobotsRules(): Promise<{
   userAgent: string;
   allow?: string;
   disallow: string | string[];
-} {
-  if (isProductionDeployment()) {
+}> {
+  const production = await isProductionHost();
+
+  if (production) {
     return {
       userAgent: "*",
       allow: "/",
@@ -88,8 +91,9 @@ export function getRobotsRules(): {
 }
 
 /** Returns the sitemap URL for robots.txt — only in production */
-export function getRobotsSitemapUrl(): string | undefined {
-  if (isProductionDeployment()) {
+export async function getRobotsSitemapUrl(): Promise<string | undefined> {
+  const production = await isProductionHost();
+  if (production) {
     return `${PRODUCTION_DOMAIN}/sitemap.xml`;
   }
   return undefined;

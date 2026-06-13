@@ -1,12 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getRobotsRules, getRobotsSitemapUrl } from "@/lib/site-url";
 
-// Force dynamic so VERCEL_ENV is checked at request time, not build time
-export const dynamic = "force-dynamic";
-
-export default function robots(): MetadataRoute.Robots {
-  const rules = getRobotsRules();
-  const sitemap = getRobotsSitemapUrl();
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const rules = await getRobotsRules();
+  const sitemap = await getRobotsSitemapUrl();
 
   return {
     rules: {

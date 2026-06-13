@@ -7,15 +7,11 @@ import { reviewContents } from "@/data/reviews";
 import { gearItems } from "@/data/gear";
 import { shouldServeFullSitemap, PRODUCTION_DOMAIN } from "@/lib/site-url";
 
-// Force dynamic so VERCEL_ENV is checked at request time, not build time
-export const dynamic = "force-dynamic";
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = PRODUCTION_DOMAIN;
   const now = new Date();
 
-  // Only serve full sitemap in production
-  if (!shouldServeFullSitemap()) {
+  if (!(await shouldServeFullSitemap())) {
     return [
       {
         url: baseUrl,
